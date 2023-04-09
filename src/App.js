@@ -1,24 +1,33 @@
-import logo from './logo.svg';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 
+import SignIn from './pages/SignIn/SignIn';
+import SharedLayout from './pages/SharedLayout';
+import Home from './pages/Home/Home';
+import { useSelector } from 'react-redux';
+import Search from './pages/Search/Search';
+import Video from './pages/Video/Video';
+
 function App() {
+  const { currentUser } = useSelector((state) => state.user);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <HashRouter>
+        <Routes>
+          <Route path='/signin' element={currentUser ? <Home /> : <SignIn />}/>
+          <Route path='/' element={<SharedLayout />}>
+            <Route index element={<Home type='random' />} />
+            <Route path='trends' element={<Home type='trend' />} />
+            <Route path='subscriptions' element={<Home type='sub' />} />
+            <Route path='search' element={<Search />} />
+            <Route path='video'>
+              <Route path=':id' element={<Video />} />
+            </Route>
+          </Route>
+        </Routes>
+      </HashRouter>
+    </>
   );
 }
 
